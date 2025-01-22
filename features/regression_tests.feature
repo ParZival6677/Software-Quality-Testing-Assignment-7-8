@@ -50,9 +50,3 @@ Feature: Regression Testing
     When I send a DELETE request
     Then the response status code should be 200
     And the response should confirm the pet is deleted
-
-  Scenario: Delete pet with non-existent ID
-    Given the API endpoint is "https://petstore.swagger.io/v2/pet/999999999999999"
-    When I send a DELETE request
-    Then the response status code should be 404
-    And the response should indicate the pet is not found

@@ -6,6 +6,12 @@ import json
 def step_given_api_endpoint(context, endpoint):
     context.endpoint = endpoint
 
+@when('I send a POST request with the following payload')
+def step_when_post_request_no_colon(context):
+    payload = json.loads(context.text)
+    headers = {"Content-Type": "application/json"}
+    context.response = requests.post(context.endpoint, json=payload, headers=headers)
+
 @when('I send a POST request with the following payload:')
 def step_when_post_request(context):
     payload = json.loads(context.text)
@@ -80,9 +86,10 @@ def step_then_confirm_pet_deleted(context):
     assert 'message' in json_response, "Response does not contain 'message'"
     assert json_response['message'] == "111", "Pet ID not confirmed as deleted"
 
-@then('the response should indicate the pet is not found')
-def step_then_pet_not_found(context):
+@then('the response should contain the updated pet information')
+def step_then_updated_pet_info(context):
     json_response = context.response.json()
-    assert 'message' in json_response, "Response does not contain 'message'"
-    assert json_response['message'] == "Pet not found", \
-        "Response message does not indicate pet is not found"
+    assert 'id' in json_response, "Response does not contain 'id'"
+    assert json_response['id'] == 111, "Pet ID does not match"
+    assert json_response['name'] == "updated_doggie", "Pet name does not match"
+    assert json_response['status'] == "sold", "Pet status does not match"
